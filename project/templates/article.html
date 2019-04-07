@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+       <style type="text/css">
+        body{
+
+            width: 90%;
+            margin:0 auto;
+            padding-top: 20px;
+        }
+        .eachArticle{
+            margin: 0 auto;
+            background: #ececec;
+            padding-left: 10px;
+            padding-right: 10px;
+            margin-bottom: 10px;
+        }
+        .eachComment{
+            margin: 0 auto;
+            background: #ececec;
+            padding-left: 10px;
+            padding-right: 10px;
+            margin-bottom: 10px;
+        }
+        .text{
+            font-size: 20pt;
+        }
+        .title{
+            width: 50%;
+
+            font-size: 18pt;
+            text-align: left;
+        }
+        .imageStyle{
+            padding-top: 10px;
+            text-align: right;
+            width: 100%;
+
+        }
+        .textcolor{
+            color: brown;
+        }
+        .date{
+            font-size: 14pt;
+            width: 50%;
+            text-align: right;
+
+        }
+    </style>
+</head>
+
+<body>
+
+ <div class="eachArticle">
+        <div style="font-size: 20pt;text-align: center"> {{article[10]}}</div>
+        <i>{{article[1]}}</i>
+        <p>Author:{{article[12]}}</p>
+         <p class="textcolor">Abstract:</p>
+        <div>{{article[6]}}</div>
+         <p class="textcolor">Highlight part:</p>
+        <div>{{article[7]}}</div>
+        <p class="textcolor">Main body:</p>
+        <div>{{article[9]}}</div>
+    </div>
+</body>
+</html>

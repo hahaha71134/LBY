@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+     <link href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
+
+     <style type="text/css">
+        body{
+
+            width: 90%;
+            margin:0 auto;
+            padding-top: 20px;
+        }
+        .eachArticle{
+            margin: 0 auto;
+            background: #ececec;
+            padding-left: 10px;
+            padding-right: 10px;
+            margin-bottom: 10px;
+        }
+        .eachComment{
+            margin: 0 auto;
+            background: #ececec;
+            padding-left: 10px;
+            padding-right: 10px;
+            margin-bottom: 10px;
+        }
+        .text{
+            font-size: 20pt;
+        }
+        .title{
+            width: 50%;
+
+            font-size: 18pt;
+            text-align: left;
+        }
+        .imageStyle{
+            padding-top: 10px;
+            text-align: right;
+            width: 100%;
+
+        }
+        .textcolor{
+            color: brown;
+
+        }
+        .date{
+            font-size: 14pt;
+            width: 50%;
+            text-align: right;
+
+        }
+
+    </style>
+</head>
+<body>
+
+
+ {% for result in resultInfList%}
+
+    <p style="font-size: 20pt;">Article</p>
+        <div class="eachArticle" onclick="toArticle({{ result.articleId }})" >
+            <div style="font-size: 20pt;text-align: center"> {{result.articleName}}</div>
+            <i>{{result.date}}</i>
+            <p id="authorName" class="authorName">Author Name:{{result.authorName}}</p>
+
+            <p ><span>Author Email:</span><span id="author" class="author">{{result.author}}</span></p>
+             <p class="textcolor">Abstract:</p>
+            <div  id="abstract" class="abstract">{{result.abstract}}</div>
+             <p class="textcolor">Highlight part:</p>
+            <div  id="highlight" class="highlight">{{result.highlight}}</div>
+
+        </div>
+
+     <p>Comment</p>
+
+
+          {% for comment in result.comment%}
+
+
+              <div>
+                  <div  class="eachComment"  id="eachComment"> {{comment.content}}</div>
+                   <div class="imageStyle" style="margin-bottom: 20px">
+
+                        <button class="btn btn-default"><image  src="/static/zan.png" onclick="cGoodVote({{result.articleId }},{{comment.commentId}})"></image>{{ comment.goodNum }}</button>
+                        <button class="btn btn-default"><image  src="/static/badVote.png" onclick="cBadVote({{ result.articleId }},{{comment.commentId}})" ></image>{{ comment.badNum }}</button>
+                    </div>
+              </div>
+
+
+          {% endfor %}
+
+
+
+      {% endfor %}
+</body>
+</html>
+<script src="https://cdn.jsdelivr.net/npm/jquery@1.12.4/dist/jquery.min.js"></script>
+    <!-- 加载 Bootstrap 的所有 JavaScript 插件。你也可以根据需要只加载单个插件。 -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/js/bootstrap.min.js"></script>
+
+<script type="text/javascript">
+     function prompt(  ) 　　{ 　
+        var daer= {{keywords|tojson }}
+         var r = new RegExp(daer, "ig");
+
+
+          $('.abstract').html($('#abstract').text().replace(r, '<font color="darkorange">'+daer+'</font>'));
+
+
+          $('.authorName').html( $("#authorName").text().replace(r, '<font color="darkorange">'+daer+'</font>'));
+
+          $('.highlight').html($("#highlight").text().replace(r, '<font color="darkorange">'+daer+'</font>'));
+
+
+        $('.author').html($("#author").text().substring(0, 4)+'*****');
+
+          $('#eachComment').html($("#eachComment").text().replace(r, '<font color="darkorange">'+daer+'</font>'));
+
+    } 　　
+    /*用window.onload调用myfun()*/　
+    　
+    // 不要括号
+    window.onload = prompt
+
+
+
+     function toArticle(articleId) {
+
+ window.location.href = "/articlePage/"+articleId;
+    }
+function toDonate() {
+    window.location.href = "/donatePage"
+    }
+function goodVote(articleId){
+
+    $.ajax({
+                url:"/goodVote/"+articleId,
+                type:"post",
+
+
+                success: function () {
+                    window.location.href = "/articlePage/"+articleId
+                }
+            })
+
+}
+function badVote(articleId){
+
+    $.ajax({
+                url:"/badVote/"+articleId,
+                type:"post",
+
+
+                success: function () {
+                    window.location.href = "/articlePage/"+articleId
+                }
+            })
+
+}
+
+function cGoodVote(articleId,commentId){
+
+    $.ajax({
+                url:"/cGoodVote/"+commentId,
+                type:"post",
+                success: function () {
+                    window.location.reload()
+                }
+            })
+
+}
+function cBadVote(articleId,commentId){
+
+    $.ajax({
+                url:"/cBadVote/"+articleId,
+                type:"post",
+                success: function () {
+                    window.location.reload()
+                }
+            })
+
+}
+
+
+</script>

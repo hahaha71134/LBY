@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
+
+        <style type="text/css">
+        body{
+
+            width: 90%;
+            margin:0 auto;
+             padding-top: 20px;
+        }
+        .eachArticle{
+            margin: 0 auto;
+            background: #ececec;
+            padding-left: 10px;
+            padding-right: 10px;
+            margin-bottom: 10px;
+        }
+
+        .text{
+            font-size: 20pt;
+
+        }
+        .title{
+            width: 50%;
+
+            font-size: 16pt;
+            text-align: left;
+        }
+        .imageStyle{
+            padding-top: 10px;
+            text-align: right;
+            width: 100%;
+
+        }
+        .textcolor{
+            color: brown;
+        }
+        .date{
+            font-size: 14pt;
+            width: 50%;
+            text-align: right;
+
+        }
+        form{
+            display: inline
+        }
+    </style>
+
+</head>
+<body>
+
+<form action="/selectByKeywords" method="post" style="display: inline">
+<div class="row" style="height: 60px;">
+  <div class="col-lg-6" style="display: flex;flex-direction: row">
+      <div style="width: 150px;height: 40px;background: darkseagreen;text-align: center;line-height: 40px" onclick="toHome()">HOME</div>
+      <div style="width: 150px;height: 40px;background: cadetblue;text-align: center;line-height: 40px" onclick="toPersonal()">MyPage</div>
+  </div><!-- /.col-lg-6 -->
+  <div class="col-lg-6">
+    <div class="input-group">
+
+         <input name="keywords" class="form-control"  placeholder="Please input keywords" type="text"/>
+          <span class="input-group-btn">
+             <input type="submit" value="submit" class="btn btn-default ">
+          </span>
+
+
+    </div><!-- /input-group -->
+  </div><!-- /.col-lg-6 -->
+</div>
+
+</form>
+
+
+
+
+      {% for main in mainInf%}
+          <div onclick="toTopic({{ main.topicId }})">
+             <p class="text"> Topic:{{main.topicName}}</p>
+
+          </div>
+          {% for article in main.article%}
+
+              <div class="eachArticle" onclick="toArticle({{article.articleId}})">
+                  <div style="display:flex;flex-direction:row;width: 100%">
+
+                      <div class="title"> {{article.articleName}}<i  style="margin-left: 20px;font-size: 12pt; color: chocolate">score:{{article.score }}</i></div>
+                      <div class="date"> <i>{{article.date}}</i></div>
+
+                  </div>
+
+
+              </div>
+          {% endfor %}
+      {% endfor %}
+</body>
+</html>
+<script type="text/javascript">
+
+
+function toArticle(articleId) {
+
+ window.location.href = "/articlePage/"+articleId;
+    }
+
+function toPersonal() {
+    window.location.href = "/enterPage";
+}
+function toHome() {
+    window.location.href = "/";
+}
+function toTopic(topicId) {
+    window.location.href = "/topicPage/"+topicId;
+}
+</script>

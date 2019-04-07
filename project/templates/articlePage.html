@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style type="text/css">
+        body{
+
+            width: 90%;
+            margin:0 auto;
+            padding-top: 20px;
+        }
+        .eachArticle{
+            margin: 0 auto;
+            background: #ececec;
+            padding-left: 10px;
+            padding-right: 10px;
+            margin-bottom: 10px;
+        }
+        .eachComment{
+            margin: 0 auto;
+            background: #ececec;
+            padding-left: 10px;
+            padding-right: 10px;
+            margin-bottom: 10px;
+        }
+        .text{
+            font-size: 20pt;
+        }
+        .title{
+            width: 50%;
+
+            font-size: 18pt;
+            text-align: left;
+        }
+        .imageStyle{
+            padding-top: 10px;
+            text-align: right;
+            width: 100%;
+
+        }
+        .textcolor{
+            color: brown;
+        }
+        .date{
+            font-size: 14pt;
+            width: 50%;
+            text-align: right;
+
+        }
+    </style>
+</head>
+<body>
+<form action="/selectByKeywords" method="post" style="display: inline">
+<div class="row" style="height: 60px;">
+  <div class="col-lg-6" style="display: flex;flex-direction: row">
+      <div style="width: 150px;height: 40px;background: darkseagreen;text-align: center;line-height: 40px" onclick="toHome()">HOME</div>
+      <div style="width: 150px;height: 40px;background: cadetblue;text-align: center;line-height: 40px" onclick="toPersonal()">MyPage</div>
+  </div><!-- /.col-lg-6 -->
+  <div class="col-lg-6">
+    <div class="input-group">
+
+         <input name="keywords" class="form-control"  placeholder="Please input keywords" type="text"/>
+          <span class="input-group-btn">
+             <input type="submit" value="submit" class="btn btn-default ">
+          </span>
+
+
+    </div><!-- /input-group -->
+  </div><!-- /.col-lg-6 -->
+</div>
+
+</form>
+
+
+
+    <div style="text-align: right;margin-bottom: 20px">
+          <button onclick="download({{articleInf[0]}})">download</button>
+    </div>
+    <div class="eachArticle">
+        <div style="font-size: 20pt;text-align: center"> {{articleInf[10]}}</div>
+        <i>{{articleInf[1]}}</i>
+          <p id="authorName">Author Name:{{articleInf[12]}}</p>
+
+            <p ><span>Author Email:</span><span id="author">{{articleInf[2]}}</span></p>
+
+
+         <p class="textcolor">Abstract:</p>
+        <div>{{articleInf[6]}}</div>
+         <p class="textcolor">Highlight part:</p>
+        <div>{{articleInf[7]}}</div>
+
+    </div>
+
+
+
+     <div class="imageStyle">
+         <button class="btn btn-default"><image  src="/static/zan.png" onclick="goodVote({{articleInf[0]}})"></image>{{ articleInf[3] }}</button>
+         <button class="btn btn-default"><image  src="/static/badVote.png" onclick="badVote({{articleInf[0]}})" ></image>{{ articleInf[4] }}</button>
+             <button class="btn btn-warning" onclick="toDonate()">Donate</button>
+     </div>
+
+
+<!-- 模态框（Modal） -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabel">Comment</h4>
+            </div>
+           <form id="uploadForm" enctype="multipart/form-data" >
+                <div class="modal-body">
+                    <span id="commentHelp"></span>
+                    <input name="articleId" value="{{articleInf[0] }}" type="hidden">
+                    <textarea style="width: 100%;height: 300px" id="comment" name="comment" placeholder="Please input your comments"></textarea></div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">close</button>
+                    <input id="submit" value="submit" class="btn btn-primary" type="button"/>
+
+
+                </div>
+            </form>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
+    <div style="width: 100%;display: flex;flex-direction: row;height: 60px;margin-top: 20px" >
+         <div  style="text-align: left;width: 50%">
+                 Comment
+        </div>
+
+        <!-- 按钮触发模态框 -->
+
+       <div  style="text-align: right;width: 50%">
+           <button class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal">Add comments</button>
+
+        </div>
+    </div>
+
+    {% for comment in commentInf%}
+              <div>
+                  <div class="eachComment"> {{comment[2]}}</div>
+                   <div class="imageStyle" style="margin-bottom: 20px">
+                        <button class="btn btn-default"><image  src="/static/zan.png" onclick="cGoodVote({{ articleInf[0] }},{{comment[0]}})"></image>{{ comment[3] }}</button>
+                        <button class="btn btn-default"><image  src="/static/badVote.png" onclick="cBadVote({{ articleInf[0] }},{{comment[0]}})" ></image>{{ comment[4] }}</button>
+                    </div>
+
+              </div>
+    {% endfor %}
+
+</body>
+
+</html>
+<script src="https://cdn.jsdelivr.net/npm/jquery@1.12.4/dist/jquery.min.js"></script>
+    <!-- 加载 Bootstrap 的所有 JavaScript 插件。你也可以根据需要只加载单个插件。 -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/js/bootstrap.min.js"></script>
+
+<script type="text/javascript">
+function prompt(  ) 　　{ 　
+
+          var authorEmail = $("#author").text();
+
+        $('#author').html(authorEmail.substring(0, 4)+'*****');
+
+    } 　　
+    /*用window.onload调用myfun()*/　
+    　
+    // 不要括号
+    window.onload = prompt;
+function toDonate() {
+    window.location.href = "/donatePage"
+    }
+
+$(document).on('click', '#submit', function() {
+      var arrMg = ["fuck", "tmd", "他妈的","bitch","shit",'卧槽'];
+
+
+
+  var comment = document.getElementById("comment").value;
+  // 正则表达式
+  // \d 匹配数字
+
+  for (var i = 0; i < arrMg.length; i++) {
+    var r = new RegExp(arrMg[i], "ig");
+
+    isComment=r.test(comment)
+      if(isComment){
+
+        break;
+      }
+  }
+    if (comment=='') {
+
+        var a=document.getElementById ("commentHelp");
+        a.innerHTML = "Can't be empty";
+    }else if(isComment){
+         var a=document.getElementById ("commentHelp");
+        a.innerHTML = "Please check whether the words you enter contain swear words";
+    }else {
+        var formData = new FormData($('#uploadForm')[0]);
+       $.ajax({
+                url:"/insertComment",
+                type:"post",
+                data: formData,
+                contentType:false,
+                 processData:false,
+                success: function () {
+                      window.location.reload()
+                }
+            })
+
+    }
+
+
+
+})
+
+function toPersonal() {
+    window.location.href = "/enterPage";
+}
+function toHome() {
+    window.location.href = "/";
+}
+
+function goodVote(articleId){
+
+    $.ajax({
+                url:"/goodVote/"+articleId,
+                type:"post",
+
+
+                success: function () {
+                    window.location.href = "/articlePage/"+articleId
+                }
+            })
+
+}
+function badVote(articleId){
+
+    $.ajax({
+                url:"/badVote/"+articleId,
+                type:"post",
+
+
+                success: function () {
+                    window.location.href = "/articlePage/"+articleId
+                }
+            })
+
+}
+
+function cGoodVote(articleId,commentId){
+
+    $.ajax({
+                url:"/cGoodVote/"+commentId,
+                type:"post",
+
+
+                success: function () {
+                    window.location.reload()
+                }
+            })
+
+}
+function cBadVote(articleId,commentId){
+
+    $.ajax({
+                url:"/cBadVote/"+commentId,
+                type:"post",
+
+
+                success: function () {
+                    window.location.reload()
+                }
+            })
+
+}
+
+function download(articleId) {
+     window.location.href = "/download/"+articleId
+}
+
+</script>
