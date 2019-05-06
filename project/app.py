@@ -17,6 +17,13 @@ import difflib
 from Database import Database
 app = Flask(__name__)
 # -*- coding: utf-8 -*-
+@app.route('/toAuthorPage/<authorEmail>')
+def toAuthorPage(authorEmail):
+
+    database = Database
+    articleInf=database.selectAllArticleByAuthor(authorEmail)
+    print(articleInf)
+    return flask.render_template('authorPage.html',articleInf=articleInf);
 
 @app.route('/')
 def mainPage():
