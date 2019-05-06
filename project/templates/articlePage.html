@@ -281,5 +281,10 @@ function cBadVote(articleId,commentId){
 function download(articleId) {
      window.location.href = "/download/"+articleId
 }
+$(document).on('click', '#authorName', function(e) {
+      let authorEmail=e.currentTarget.dataset.email
+
+       window.location.href = "/toAuthorPage/"+authorEmail
+    })
 
 </script>
