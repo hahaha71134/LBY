@@ -9,6 +9,7 @@ from flask import  request
 
 
 class Database:
+    #browse times
     def browseTime(ip,articled):
         conn = sqlite3.connect('article.sqlite3')
         c = conn.cursor()
@@ -34,6 +35,7 @@ class Database:
         c.close()
         conn.commit()
 
+    # Search profiles by id
     def selectPersonal(id):
         conn = sqlite3.connect('article.sqlite3')
         c = conn.cursor()
@@ -55,7 +57,6 @@ class Database:
         for element in r2:
             if (element not in list1):
                 list1.append(element)
-        print(list1)
         list2=[]
         for articleId in list1:
             sql3 = "SELECT * FROM article where articleId=%s" % (articleId)
@@ -63,8 +64,6 @@ class Database:
             c.execute(sql3)
             r3 = c.fetchall()
             list2.extend(r3)
-
-
         personalInfList=[]
         for article in list2:
             earchRecord = {}
@@ -98,6 +97,7 @@ class Database:
         conn.commit()
         return personalInfList
 
+    # Search all articles
     def selectAll():
 
         conn = sqlite3.connect('article.sqlite3')
@@ -138,6 +138,7 @@ class Database:
         c.close()
         conn.commit()
         return personalInfList
+    #Search for articles by ID
 
     def selectArticle(id):
 
@@ -150,6 +151,7 @@ class Database:
             c.execute(sql)
             r = c.fetchone()
             return r
+    #Search for article content by ID
     def selectArticleContent(id):
 
             conn = sqlite3.connect('article.sqlite3')
@@ -161,6 +163,7 @@ class Database:
             c.execute(sql)
             r = c.fetchone()
             return r
+    #Search for comments on articles by ID
     def selectComment(id):
 
             conn = sqlite3.connect('article.sqlite3')
@@ -172,6 +175,7 @@ class Database:
             c.execute(sql)
             r = c.fetchall()
             return r
+    #Search for titles by ID and childTopicId
     def selectTopic(id,childTopicId):
         conn = sqlite3.connect('article.sqlite3')
         c = conn.cursor()
@@ -196,10 +200,6 @@ class Database:
             sql = "SELECT * FROM article where topicId='" + id + "'"+" and hidden=1  ORDER BY (goodNum*2.5 - badNum*2.5 + record + commentNum * 1.5 )/(goodNum*5+badNum*5+record*2+commentNum*3) DESC LIMIT 3"
         c.execute(sql)
         r = c.fetchall()
-
-
-
-
         return r
     def selectByKeywords(keywords):
         conn = sqlite3.connect('article.sqlite3')
@@ -442,14 +442,12 @@ class Database:
         r1.extend(r)
         return r1
 
-    def selectArticleByAuthor(email):
+    def selectArticleByAuthor(email,ip):
         conn = sqlite3.connect('article.sqlite3')
         c = conn.cursor()
-        sql = "select date from article where author='%s' order by date DESC LIMIT 1"%(email)
-
+        sql = "select date from article where author='%s' and ip='%s' order by date DESC LIMIT 1"%(email,ip)
         c.execute(sql)
         r = c.fetchone()
-
         c.close()
         conn.commit()
         return r
