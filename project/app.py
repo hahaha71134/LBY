@@ -207,7 +207,6 @@ def badVote(articleId):
 @app.route('/cGoodVote/<commentId>',methods=['GET','POST'])
 def cGoodVote(commentId):
     ip = request.remote_addr
-
     database = Database
     database.cGoodVote(ip,commentId)
     return "ok"
@@ -234,7 +233,9 @@ def detection():
     file=encoded.decode('ascii')
     database = Database
     now_time = datetime.datetime.now().strftime('%Y-%m-%d %H:%M')
-    r=database.selectArticleByAuthor(email)
+
+    ip = request.remote_addr
+    r=database.selectArticleByAuthor(email,ip)
     if r:
         t=time.mktime(time.strptime(now_time, '%Y-%m-%d %H:%M')) - time.mktime(time.strptime(r[0], '%Y-%m-%d %H:%M'))
         if(t>300):
@@ -286,6 +287,7 @@ def hidden(articleId,ishidden):
 
     article = database.selectAllArticle()
     return flask.render_template('managementPage.html', article=article);
+
 
 @app.route('/delete/<articleId>')
 def delete(articleId):
