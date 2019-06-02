@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>articlePage</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
 
     <style type="text/css">
@@ -15,16 +15,15 @@
         .eachArticle{
             margin: 0 auto;
             background: #ececec;
-            padding-left: 10px;
-            padding-right: 10px;
+            padding: 10px;
             margin-bottom: 10px;
         }
         .eachComment{
             margin: 0 auto;
             background: #ececec;
-            padding-left: 10px;
-            padding-right: 10px;
+
             margin-bottom: 10px;
+            padding: 10px;
         }
         .text{
             font-size: 20pt;
@@ -79,10 +78,10 @@
     <div style="text-align: right;margin-bottom: 20px">
           <button onclick="download({{articleInf[0]}})">download</button>
     </div>
-    <div class="eachArticle">
+    <div class="eachArticle"  >
         <div style="font-size: 20pt;text-align: center"> {{articleInf[10]}}</div>
         <i>{{articleInf[1]}}</i>
-          <p id="authorName">Author Name:{{articleInf[12]}}</p>
+          <p id="authorName" data-email="{{articleInf[2]}}">Author Name:{{articleInf[12]}}</p>
 
             <p ><span>Author Email:</span><span id="author">{{articleInf[2]}}</span></p>
 
@@ -103,7 +102,7 @@
      </div>
 
 
-<!-- 模态框（Modal） -->
+<!-- 妯℃€佹锛圡odal锛?-->
 <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -131,7 +130,7 @@
                  Comment
         </div>
 
-        <!-- 按钮触发模态框 -->
+        <!-- 鎸夐挳瑙﹀彂妯℃€佹 -->
 
        <div  style="text-align: right;width: 50%">
            <button class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal">Add comments</button>
@@ -141,7 +140,9 @@
 
     {% for comment in commentInf%}
               <div>
-                  <div class="eachComment"> {{comment[2]}}</div>
+                  <div class="eachComment" > {{comment[2]}}
+                    <p style="width: 100%;text-align: right;color: #888888;" onclick="toAuthorPage({{ comment[6] }})"><i>{{comment[5]}}</i> </p></div>
+
                    <div class="imageStyle" style="margin-bottom: 20px">
                         <button class="btn btn-default"><image  src="/static/zan.png" onclick="cGoodVote({{ articleInf[0] }},{{comment[0]}})"></image>{{ comment[3] }}</button>
                         <button class="btn btn-default"><image  src="/static/badVote.png" onclick="cBadVote({{ articleInf[0] }},{{comment[0]}})" ></image>{{ comment[4] }}</button>
@@ -154,33 +155,36 @@
 
 </html>
 <script src="https://cdn.jsdelivr.net/npm/jquery@1.12.4/dist/jquery.min.js"></script>
-    <!-- 加载 Bootstrap 的所有 JavaScript 插件。你也可以根据需要只加载单个插件。 -->
+    <!-- 鍔犺浇 Bootstrap 鐨勬墍鏈?JavaScript 鎻掍欢銆備綘涔熷彲浠ユ牴鎹渶瑕佸彧鍔犺浇鍗曚釜鎻掍欢銆?-->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/js/bootstrap.min.js"></script>
 
 <script type="text/javascript">
-function prompt(  ) 　　{ 　
+
+function prompt(  ) 銆€銆€{ 銆€
 
           var authorEmail = $("#author").text();
+          email = authorEmail.match(/(\S*)@/)[1];
+            l=email.length
+            l2=authorEmail.length
 
-        $('#author').html(authorEmail.substring(0, 4)+'*****');
+        $('#author').html(authorEmail.substring(0,l/2)+'*****'+authorEmail.substring(l,l2));
 
-    } 　　
-    /*用window.onload调用myfun()*/　
-    　
-    // 不要括号
+    } 銆€銆€
+    /*鐢╳indow.onload璋冪敤myfun()*/銆€
+    銆€
+    // 涓嶈鎷彿
     window.onload = prompt;
 function toDonate() {
     window.location.href = "/donatePage"
     }
 
 $(document).on('click', '#submit', function() {
-      var arrMg = ["fuck", "tmd", "他妈的","bitch","shit",'卧槽'];
+      var arrMg = ["fuck", "tmd", "浠栧鐨?,"bitch","shit",'鍗фЫ'];
 
 
 
   var comment = document.getElementById("comment").value;
-  // 正则表达式
-  // \d 匹配数字
+  // 姝ｅ垯琛ㄨ揪寮?  // \d 鍖归厤鏁板瓧
 
   for (var i = 0; i < arrMg.length; i++) {
     var r = new RegExp(arrMg[i], "ig");
@@ -232,20 +236,22 @@ function goodVote(articleId){
 
 
                 success: function () {
-                    window.location.href = "/articlePage/"+articleId
+                   window.location.reload()
                 }
             })
 
+}
+function toAuthorPage(ip) {
+
+     window.location.href = "/toAuthorPageByIp/"+ip;
 }
 function badVote(articleId){
 
     $.ajax({
                 url:"/badVote/"+articleId,
                 type:"post",
-
-
                 success: function () {
-                    window.location.href = "/articlePage/"+articleId
+                   window.location.reload()
                 }
             })
 
@@ -256,7 +262,6 @@ function cGoodVote(articleId,commentId){
     $.ajax({
                 url:"/cGoodVote/"+commentId,
                 type:"post",
-
 
                 success: function () {
                     window.location.reload()
@@ -281,7 +286,8 @@ function cBadVote(articleId,commentId){
 function download(articleId) {
      window.location.href = "/download/"+articleId
 }
-$(document).on('click', '#authorName', function(e) {
+
+ $(document).on('click', '#authorName', function(e) {
       let authorEmail=e.currentTarget.dataset.email
 
        window.location.href = "/toAuthorPage/"+authorEmail
