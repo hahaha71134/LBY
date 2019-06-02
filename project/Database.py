@@ -151,6 +151,17 @@ class Database:
             c.execute(sql)
             r = c.fetchone()
             return r
+    def selectArticleByIp(ip):
+
+            conn = sqlite3.connect('article.sqlite3')
+            c = conn.cursor()
+
+
+            sql = "SELECT * FROM article where ip='"+ip+"'"
+
+            c.execute(sql)
+            r = c.fetchone()
+            return r
     #Search for article content by ID
     def selectArticleContent(id):
 
