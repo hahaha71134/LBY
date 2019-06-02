@@ -37,6 +37,14 @@ def articlePage(articleId):
         articleInf = database.selectArticle(articleId)
         commentInf=database.selectComment(articleId)
         return flask.render_template("articlePage.html", articleInf=articleInf,commentInf=commentInf)
+@app.route('/toAuthorPageByIp/<ip>')
+def toAuthorPageByIp(ip):
+    database = Database;
+    articleInf = database.selectArticleByIp(ip)
+    return flask.render_template('authorPage.html', articleInf=articleInf);
+
+
+
 
 @app.route('/enterPage')
 def enterPage():
